@@ -452,8 +452,44 @@ function getSpiralMatrix(size) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+/**
+ * Rotates a matrix by 90 degrees clockwise in place.
+ * No use of Array or String methods allowed.
+ *
+ * @param {number[][]} matrix - The matrix to rotate.
+ * @return {number[][]} The rotated matrix.
+ */
+function rotateMatrix(matrix) {
+  const m = matrix;
+  const n = m.length;
+
+  let i = 0;
+  while (i < n) {
+    let j = i + 1;
+    while (j < n) {
+      const temp = m[i][j];
+      m[i][j] = m[j][i];
+      m[j][i] = temp;
+      j += 1;
+    }
+    i += 1;
+  }
+
+  i = 0;
+  while (i < n) {
+    let left = 0;
+    let right = n - 1;
+    while (left < right) {
+      const temp = m[i][left];
+      m[i][left] = m[i][right];
+      m[i][right] = temp;
+      left += 1;
+      right -= 1;
+    }
+    i += 1;
+  }
+
+  return m;
 }
 
 /**
@@ -470,8 +506,36 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const a = arr;
+  function quickSort(left, right) {
+    if (left >= right) return;
+
+    const pivotIndex = Math.floor((left + right) / 2);
+    const pivot = a[pivotIndex];
+
+    let i = left;
+    let j = right;
+
+    while (i <= j) {
+      while (a[i] < pivot) i += 1;
+      while (a[j] > pivot) j -= 1;
+
+      if (i <= j) {
+        const temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+        i += 1;
+        j -= 1;
+      }
+    }
+
+    if (left < j) quickSort(left, j);
+    if (i < right) quickSort(i, right);
+  }
+
+  quickSort(0, a.length - 1);
+  return a;
 }
 
 /**
@@ -491,8 +555,52 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  if (iterations === 0 || str.length <= 1) return str;
+
+  const n = str.length;
+
+  function shuffleOnce(s) {
+    let even = '';
+    let odd = '';
+
+    let i = 0;
+    while (i < n) {
+      const ch = s[i];
+      if (i % 2 === 0) {
+        even += ch;
+      } else {
+        odd += ch;
+      }
+      i += 1;
+    }
+
+    return even + odd;
+  }
+
+  let result = str;
+  const seen = {};
+  let step = 0;
+
+  while (step < iterations) {
+    if (seen[result]) {
+      const cycleLength = step - seen[result];
+      const remaining = (iterations - step) % cycleLength;
+
+      let k = 0;
+      while (k < remaining) {
+        result = shuffleOnce(result);
+        k += 1;
+      }
+      return result;
+    }
+
+    seen[result] = step;
+    result = shuffleOnce(result);
+    step += 1;
+  }
+
+  return result;
 }
 
 /**
@@ -513,8 +621,61 @@ function shuffleChar(/* str, iterations */) {
  * 321321   => 322113
  *
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  const digits = [];
+  let temp = number;
+  while (temp > 0) {
+    const digit = temp % 10;
+    digits[digits.length] = digit;
+    temp = (temp - digit) / 10;
+  }
+
+  let left = 0;
+  let right = digits.length - 1;
+  while (left < right) {
+    const t = digits[left];
+    digits[left] = digits[right];
+    digits[right] = t;
+    left += 1;
+    right -= 1;
+  }
+
+  const n = digits.length;
+  let i = n - 2;
+
+  while (i >= 0 && digits[i] >= digits[i + 1]) {
+    i -= 1;
+  }
+
+  if (i < 0) return number;
+
+  let j = n - 1;
+  while (digits[j] <= digits[i]) {
+    j -= 1;
+  }
+
+  const tempSwap = digits[i];
+  digits[i] = digits[j];
+  digits[j] = tempSwap;
+
+  left = i + 1;
+  right = n - 1;
+  while (left < right) {
+    const t = digits[left];
+    digits[left] = digits[right];
+    digits[right] = t;
+    left += 1;
+    right -= 1;
+  }
+
+  let result = 0;
+  let k = 0;
+  while (k < n) {
+    result = result * 10 + digits[k];
+    k += 1;
+  }
+
+  return result;
 }
 
 module.exports = {
