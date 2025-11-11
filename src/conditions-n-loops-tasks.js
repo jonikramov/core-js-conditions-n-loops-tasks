@@ -108,8 +108,54 @@ function isIsoscelesTriangle(a, b, c) {
  *  10  => X
  *  26  => XXVI
  */
-function convertToRomanNumerals(/* num */) {
-  throw new Error('Not implemented');
+function convertToRomanNumerals(num) {
+  let res = '';
+  let n = num;
+
+  let tens = 0;
+  while (n >= 10) {
+    tens += 1;
+    n -= 10;
+  }
+  if (tens === 1) res += 'X';
+  else if (tens === 2) res += 'XX';
+  else if (tens === 3) res += 'XXX';
+
+  switch (n) {
+    case 0:
+      break;
+    case 1:
+      res += 'I';
+      break;
+    case 2:
+      res += 'II';
+      break;
+    case 3:
+      res += 'III';
+      break;
+    case 4:
+      res += 'IV';
+      break;
+    case 5:
+      res += 'V';
+      break;
+    case 6:
+      res += 'VI';
+      break;
+    case 7:
+      res += 'VII';
+      break;
+    case 8:
+      res += 'VIII';
+      break;
+    case 9:
+      res += 'IX';
+      break;
+    default:
+      break;
+  }
+
+  return res;
 }
 
 /**
@@ -254,8 +300,18 @@ function getIndexOf(str, letter) {
  *  12345, 0    => false
  *  12345, 6    => false
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  let n = num;
+
+  while (n > 0) {
+    const last = n % 10;
+    if (last === digit) {
+      return true;
+    }
+    n = (n - last) / 10;
+  }
+
+  return false;
 }
 
 /**
@@ -271,8 +327,33 @@ function isContainNumber(/* num, digit */) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  let i = 0;
+
+  while (i < arr.length) {
+    let leftSum = 0;
+    let rightSum = 0;
+
+    let j = 0;
+    while (j < i) {
+      leftSum += arr[j];
+      j += 1;
+    }
+
+    let k = i + 1;
+    while (k < arr.length) {
+      rightSum += arr[k];
+      k += 1;
+    }
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+
+    i += 1;
+  }
+
+  return -1;
 }
 
 /**
@@ -296,8 +377,64 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const n = size;
+  const matrix = [];
+
+  let i = 0;
+  while (i < n) {
+    matrix[i] = [];
+    let j = 0;
+    while (j < n) {
+      matrix[i][j] = 0;
+      j += 1;
+    }
+    i += 1;
+  }
+
+  let top = 0;
+  let bottom = n - 1;
+  let left = 0;
+  let right = n - 1;
+
+  let num = 1;
+  const total = n * n;
+
+  while (num <= total) {
+    let col = left;
+    while (col <= right && num <= total) {
+      matrix[top][col] = num;
+      num += 1;
+      col += 1;
+    }
+    top += 1;
+
+    let row = top;
+    while (row <= bottom && num <= total) {
+      matrix[row][right] = num;
+      num += 1;
+      row += 1;
+    }
+    right -= 1;
+
+    col = right;
+    while (col >= left && num <= total) {
+      matrix[bottom][col] = num;
+      num += 1;
+      col -= 1;
+    }
+    bottom -= 1;
+
+    row = bottom;
+    while (row >= top && num <= total) {
+      matrix[row][left] = num;
+      num += 1;
+      row -= 1;
+    }
+    left += 1;
+  }
+
+  return matrix;
 }
 
 /**
